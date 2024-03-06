@@ -27,8 +27,6 @@ if path.isfile(dotenv_file):
 from django.core.management.utils import get_random_secret_key
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-_4a82*9*mgk%9wpc5adh-%rtjkv--$uw3pw=sstjbdwh83dpz$'
-# SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 SECRET_KEY = getenv('DJANGO_SECRET_KEY', get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv('DEBUG', 'False')=='True'
@@ -45,7 +43,22 @@ INSTALLED_APPS = [
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	
+	'corsheaders',
+	'rest_framework',
+	'djoser',
+	
+	'users',
 ]
+
+REST_FRAMEWORK = {
+	'DEFAULT_AUTHENTICATION_CLASSES': [
+		'users.authentication.CustomJWTAuthentication',
+	],
+	'DEFAULT_PERMISSION_CLASSES': [
+		'rest_framework.permissions.IsAuthenticated',
+	]
+}
 
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
@@ -142,9 +155,40 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.timeweb.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'bot@zharim-varim.top'
-EMAIL_HOST_PASSWORD = 'gGnKRXx9'
-EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'bot@zharim-varim.top'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'info@zharim-varim.top'
+EMAIL_HOST_PASSWORD = 'KzpTX3at'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = getenv(
+	'CORS_ALLOWED_ORIGINS',
+	'http://localhost:3000,http://127.0.0.1:3000,https://1ed0-2a02-e0-6a1d-8200-c80e-12b4-125d-b323.ngrok-free.app'
+).split(',')
+CORS_ALLOW_CREDENTIALS = True
+
+DOMAIN = getenv('DOMAIN')
+SITE_NAME = 'ZharimVarim'
+
+DJOSER = {
+	'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
+	'SEND_ACTIVATION_EMAIL': True,
+	'ACTIVATION_URL': 'activation/{uid}/{token}',
+	'USER_CREATE_PASSWORD_RETYPE': True,
+	'PASSWORD_RESET_CONFIRM_RETYPE': True,
+	'TOKEN_MODEL': None,
+	'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': getenv('REDIRECT_URLS').split(',')
+}
+
+AUTH_USER_MODEL = "users.UserAccount"
+
+
+AUTH_COOKIE = 'access'
+AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
+AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True')=='True'
+AUTH_COOKIE_HTTP_ONLY = True
+AUTH_COOKIE_PATH = '/'
+AUTH_COOKIE_SAMESITE = 'None'
