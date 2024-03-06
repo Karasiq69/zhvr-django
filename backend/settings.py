@@ -85,9 +85,7 @@ if DEVELOPMENT_MODE is True:
 			'NAME': BASE_DIR / 'db.sqlite3',
 		}
 	}
-elif len(sys.argv) > 0 and sys.argv[1]!='collectstatic':
-	if getenv('DATABASE_URL', None) is None:
-		raise Exception('DATABASE_URL environment variable not defined')
+elif DEVELOPMENT_MODE is False:
 	DATABASES = {
 		'default': {
 			'ENGINE': 'django.db.backends.mysql',
@@ -134,7 +132,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
