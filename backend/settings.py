@@ -63,6 +63,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -163,13 +164,12 @@ EMAIL_HOST_USER = 'info@zharim-varim.top'
 EMAIL_HOST_PASSWORD = 'KzpTX3at'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = getenv(
 	'CORS_ALLOWED_ORIGINS',
-	'http://localhost:3000,http://127.0.0.1:3000,https://1ed0-2a02-e0-6a1d-8200-c80e-12b4-125d-b323.ngrok-free.app'
+	'http://localhost:3000,http://127.0.0.1:3000,http://127.0.0.1:8000/'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
-
 DOMAIN = getenv('DOMAIN')
 SITE_NAME = 'ZharimVarim'
 
