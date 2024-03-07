@@ -25,7 +25,7 @@ class CustomProviderAuthView(ProviderAuthView):
                 path=settings.AUTH_COOKIE_PATH,
                 secure=settings.AUTH_COOKIE_SECURE,
                 httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE
+                samesite=settings.AUTH_COOKIE_SAMESITE,
             )
             response.set_cookie(
                 'refresh',
