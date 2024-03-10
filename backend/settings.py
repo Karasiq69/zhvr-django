@@ -162,7 +162,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_COOKIE = 'access'
 AUTH_COOKIE_MAX_AGE = 60 * 60 * 24
-AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True') == 'True'
+AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True')=='True'
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
 AUTH_COOKIE_SAMESITE = getenv('AUTH_COOKIE_SAMESITE', 'None')
@@ -191,7 +191,11 @@ DJOSER = {
 	'USER_CREATE_PASSWORD_RETYPE': True,
 	'PASSWORD_RESET_CONFIRM_RETYPE': True,
 	'TOKEN_MODEL': None,
-	'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': getenv('REDIRECT_URLS').split(',')
+	'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': getenv('REDIRECT_URLS').split(','),
+	'SERIALIZERS': {
+		'user': 'users.serializers.CustomUserSerializer',
+		'current_user': 'users.serializers.CustomUserSerializer',
+	},
 }
 
 AUTH_USER_MODEL = "users.UserAccount"
