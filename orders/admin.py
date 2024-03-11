@@ -1,7 +1,14 @@
 from django.contrib import admin
+from .models import Order, OrderItem, Product, Address
 
-from orders.models import Order
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 1
+ 
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemInline,]
+    list_display = ['__str__', 'total_cost', 'created_at', 'status']
+ 
+admin.site.register(Order, OrderAdmin)
 
-
-# Register your models here.
-admin.site.register(Order)
+admin.site.register(Address)

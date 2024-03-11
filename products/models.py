@@ -24,14 +24,14 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-	# product_type = models.ForeignKey(ProductType, on_delete=models.RESTRICT)
-	category = models.ForeignKey(Category, on_delete=models.RESTRICT)
 	title = models.CharField(max_length=255)
+	category = models.ForeignKey(Category, on_delete=models.RESTRICT)
 	description = models.TextField(blank=True)
 	slug = models.SlugField(max_length=255, blank=True, unique=True)
 	regular_price = models.DecimalField(max_digits=6, decimal_places=2)
 	discount_price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 	is_active = models.BooleanField(default=True)
+	
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	
@@ -57,3 +57,8 @@ class ProductImage(models.Model):
 	is_feature = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True, editable=False)
 	updated_at = models.DateTimeField(auto_now=True, )
+	
+	def save(self, *args, **kwargs):
+		if not self.alt_text:
+			self.alt_text = slugify(self.product.title)
+		return super().save(*args, **kwargs)
