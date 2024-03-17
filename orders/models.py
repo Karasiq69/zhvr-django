@@ -1,6 +1,6 @@
 from django.db import models
 
-from products.models import Product
+from products.models import Product,  AttributeValue
 from users.models import UserAccount
 
 
@@ -64,6 +64,7 @@ class OrderItem(models.Model):
 	product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
 	price = models.IntegerField()
 	quantity = models.IntegerField(default=1)
+	attribute_values = models.ManyToManyField(AttributeValue, blank=True)
 	
 	# attribute = models.ForeignKey(DrinkAttribute, on_delete=models.SET_NULL, null=True, blank=True)
 	
@@ -72,7 +73,19 @@ class OrderItem(models.Model):
 	
 	def get_order_item_cost(self):
 		return self.price * self.quantity
+	
+	def get_price(self):
+		price = self.product.get_price()
+		if price is not None:
+			return price * self.quantity
+		return 0
 
+
+# class OrderItemSpecification(models.Model):
+# 	order_item = models.ForeignKey(OrderItem, related_name='specifications', on_delete=models.CASCADE)
+# 	specification = models.ForeignKey(ProductSpecification, on_delete=models.CASCADE)
+# 	value = models.CharField(max_length=255)
+#
 
 class Address(models.Model):
 	user = models.ForeignKey(UserAccount, related_name='addresses', on_delete=models.CASCADE, blank=True, null=True)

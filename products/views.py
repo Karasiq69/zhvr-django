@@ -1,5 +1,5 @@
 from rest_framework import mixins, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Product
 from .serializers import ProductSerializer, ProductsByCategorySerializer
 
@@ -29,4 +29,4 @@ class CategoryListView(generics.ListAPIView):
 class ProductsByCategoryListView(generics.ListAPIView):
 	queryset = Category.objects.all()
 	serializer_class = ProductsByCategorySerializer
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]

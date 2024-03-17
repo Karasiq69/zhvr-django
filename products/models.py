@@ -1,6 +1,5 @@
 from django.db import models
-
-from django.db import models
+from django.db.models import Sum
 from pytils.translit import slugify
 
 
@@ -27,19 +26,27 @@ class Product(models.Model):
 	title = models.CharField(max_length=255)
 	category = models.ForeignKey(Category, on_delete=models.RESTRICT)
 	description = models.TextField(blank=True)
-	slug = models.SlugField(max_length=255, blank=True, unique=True)
+	slug = models.SlugField(max_length=255, blank=True)
 	regular_price = models.DecimalField(max_digits=6, decimal_places=2)
 	discount_price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+	weight = models.DecimalField(max_digits=5, decimal_places=0, blank=True, null=True)
 	is_active = models.BooleanField(default=True)
 	
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	attribute_values = models.ManyToManyField('AttributeValue', blank=True)
+	
+	
+	def get_price(self):
+		attribute_price = self.attribute_values.aggregate(total_price=Sum('price'))['total_price']
+		if attribute_price is None:
+			attribute_price = 0
+		return self.regular_price + attribute_price
 	
 	class Meta:
 		ordering = ['-created_at']
 		verbose_name = 'Товар'
 		verbose_name_plural = 'Товары'
-	
 	
 	def save(self, *args, **kwargs):
 		if not self.slug:
@@ -62,3 +69,20 @@ class ProductImage(models.Model):
 		if not self.alt_text:
 			self.alt_text = slugify(self.product.title)
 		return super().save(*args, **kwargs)
+
+
+class Attribute(models.Model):
+	name = models.CharField(max_length=100)
+	category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='attributes')
+	
+	def __str__(self):
+		return self.name
+
+
+class AttributeValue(models.Model):
+	attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+	value = models.CharField(max_length=100)
+	price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+	
+	def __str__(self):
+		return f'{self.attribute.name} |  {self.value} | {self.price}'

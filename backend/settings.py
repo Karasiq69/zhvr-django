@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 	'users',
 	'orders',
 	'products',
+	'payments',
 ]
 
 REST_FRAMEWORK = {
@@ -200,11 +201,10 @@ DJOSER = {
 
 AUTH_USER_MODEL = "users.UserAccount"
 
-
-
 # YOOKASSA
 PAYMENT_SECRET_KEY = getenv('PAYMENT_SECRET_KEY')
 PAYMENT_SHOP_ID = getenv('PAYMENT_SHOP_ID')
 # Включаем доставку и оплату при оформлении заказа
 CART_DELIVERY = False
 PAYMENT_SWITCH = False
+KASSA_RETURN_URL=getenv('KASSA_RETURN_URL')
