@@ -1,3 +1,5 @@
+from rest_framework.permissions import AllowAny
+
 from .models import Product, ProductImage,  Attribute, AttributeValue
 from rest_framework import serializers
 from .models import Category, Product
@@ -63,9 +65,10 @@ class ProductsByCategorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Category
 		fields = "__all__"
+		permission_classes = [AllowAny]  # Разрешить доступ всем пользователям
+	
 	
 	def get_products(self, instance):
 		request = self.context.get('request')
 		products = instance.product_set.filter(is_active=True)
-		# Передаем контекст, чтобы request был доступен в ImageSerializer
 		return ProductSerializer(products, many=True, context={'request': request}).data
