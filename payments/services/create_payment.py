@@ -8,7 +8,7 @@ def create_payment(request, user, amount, order_id):
 	Configuration.secret_key = settings.PAYMENT_SECRET_KEY
 	session_id = request.session.session_key
 	return_url = settings.KASSA_RETURN_URL + '/checkout/payment-return/'
-	
+	# Создание платежа
 	payment = YooKassaPayment.create({
 		"amount": {
 			"value": str(amount),
