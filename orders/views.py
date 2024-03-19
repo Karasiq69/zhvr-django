@@ -111,6 +111,6 @@ class CreateOrderView(generics.CreateAPIView):
 		payment_method = request.data.get('payment_method')
 		if payment_method=='card':
 			payment = create_payment(request, request.user, order.total_cost, order.id)
-			return Response({'url': payment.confirmation.confirmation_url}, status=status.HTTP_201_CREATED)
+			return Response({'url': payment.confirmation.confirmation_url, 'order_id':order.id}, status=status.HTTP_201_CREATED)
 		
 		return Response(serializer.data, status=status.HTTP_201_CREATED)

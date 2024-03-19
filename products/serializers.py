@@ -1,6 +1,6 @@
 from rest_framework.permissions import AllowAny
 
-from .models import Product, ProductImage,  Attribute, AttributeValue
+from .models import Product, ProductImage, Attribute, AttributeValue
 from rest_framework import serializers
 from .models import Category, Product
 
@@ -16,12 +16,6 @@ class ImageSerializer(serializers.ModelSerializer):
 			image_url = obj.image.url
 			return request.build_absolute_uri(image_url) if request else image_url
 		return None
-
-
-# class ProductSpecificationValueSerializer(serializers.ModelSerializer):
-# 	class Meta:
-# 		model = ProductSpecificationValue
-# 		fields = ('specification', 'value', 'price')
 
 
 class AttributeSerializer(serializers.ModelSerializer):
@@ -43,12 +37,13 @@ class ProductSerializer(serializers.ModelSerializer):
 	# specifications = ProductSpecificationValueSerializer(many=True, source='productspecificationvalue_set')
 	# attributes = serializers.DictField(required=False)
 	attribute_values = AttributeValueSerializer(many=True)
+	
 	# attributes = AttributeSerializer(many=True)
 	
 	class Meta:
 		model = Product
 		fields = ['id', 'title', 'description', 'regular_price', 'discount_price', 'slug', 'product_image', 'category',
-		          'weight',  'attribute_values']
+		          'weight', 'attribute_values']
 
 
 class CategorySerializer(serializers.ModelSerializer):

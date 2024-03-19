@@ -29,4 +29,4 @@ class CategoryListView(generics.ListAPIView):
 class ProductsByCategoryListView(generics.ListAPIView):
 	queryset = Category.objects.all()
 	serializer_class = ProductsByCategorySerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
