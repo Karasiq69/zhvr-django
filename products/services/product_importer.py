@@ -13,8 +13,9 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 # prod
 SPREADSHEET_ID = '1MUniKMAvwdIorThCS3sPT0QuJF1GN43rksxrvqifCVk'
 RANGE_NAME = 'Sheet1'
-SERVICE_ACCOUNT_FILE = 'zharimvarim-1ff09cae89ed.json'
-
+# SERVICE_ACCOUNT_FILE = 'zharimvarim-1ff09cae89ed.json'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'zharimvarim-1ff09cae89ed.json')
 
 def authenticate_google_sheets_with_service_account(json_file_path, scopes):
 	"""Аутентификация в Google Sheets с использованием сервисного аккаунта."""
