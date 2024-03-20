@@ -76,12 +76,12 @@ def convert_to_float(value):
 
 
 def get_image_path(image_name):
-	if image_name:
-		image_path = os.path.join('importing', 'resized', f'{image_name}.jpg')
-		if os.path.exists(os.path.join(settings.MEDIA_ROOT, image_path)):
-			return image_path
-	return 'placeholder.webp'
-
+    if image_name:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(BASE_DIR, 'media', 'importing', 'resized', f'{image_name}.jpg')
+        if os.path.exists(image_path):
+            return os.path.join('importing', 'resized', f'{image_name}.jpg')
+    return 'placeholder.png'
 
 def create_or_update_attributes(product, row_data):
 	drink_value = row_data['drink_value']
