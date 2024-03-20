@@ -5,6 +5,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from backend import settings
 from products.models import ProductImage, Product, Category, Attribute, AttributeValue
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -77,7 +78,7 @@ def convert_to_float(value):
 def get_image_path(image_name):
 	if image_name:
 		image_path = os.path.join('importing', 'resized', f'{image_name}.jpg')
-		if os.path.exists(os.path.join('media', image_path)):
+		if os.path.exists(os.path.join(settings.MEDIA_ROOT, image_path)):
 			return image_path
 	return 'placeholder.webp'
 
