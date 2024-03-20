@@ -109,36 +109,20 @@ def create_or_update_attributes(product, row_data):
 
 
 def attach_image_to_product(product, image_name):
-	# Получаем существующий объект ProductImage для данного товара
-	product_image = ProductImage.objects.filter(product=product).first()
-	
 	if image_name:
 		image_path = os.path.join(settings.MEDIA_ROOT, 'importing', 'resized', f'{image_name}.jpg')
 		if os.path.exists(image_path):
-			if product_image:
-				# Если объект ProductImage существует, обновляем изображение
-				product_image.image = os.path.join('importing', 'resized', f'{image_name}.jpg')
+			with open(image_path, 'rb') as f:
+				product_image = ProductImage(product=product, alt_text=product.title)
+				product_image.image.save(f'{image_name}.jpg', File(f), save=False)
 				product_image.save()
-			else:
-				# Если объект ProductImage не существует, создаем новый
-				ProductImage.objects.create(
-					product=product,
-					alt_text=product.title,
-					image=os.path.join('importing', 'resized', f'{image_name}.jpg')
-				)
 	else:
 		placeholder_image_path = os.path.join('images', 'placeholder.webp')
-		if product_image:
-			# Если объект ProductImage существует, устанавливаем изображение-заполнитель
-			product_image.image = placeholder_image_path
-			product_image.save()
-		else:
-			# Если объект ProductImage не существует, создаем новый с изображением-заполнителем
-			ProductImage.objects.create(
-				product=product,
-				alt_text=product.title,
-				image=placeholder_image_path
-			)
+		ProductImage.objects.create(
+			product=product,
+			alt_text=product.title,
+			image=placeholder_image_path
+		)
 
 
 def create_or_update_product(row_data):
