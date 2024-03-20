@@ -18,6 +18,7 @@ RANGE_NAME = 'Sheet1'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'zharimvarim-1ff09cae89ed.json')
 
+
 def authenticate_google_sheets_with_service_account(json_file_path, scopes):
 	"""Аутентификация в Google Sheets с использованием сервисного аккаунта."""
 	credentials = service_account.Credentials.from_service_account_file(json_file_path, scopes=scopes)
@@ -76,12 +77,13 @@ def convert_to_float(value):
 
 
 def get_image_path(image_name):
-    if image_name:
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        image_path = os.path.join(BASE_DIR, 'media', 'importing', 'resized', f'{image_name}.jpg')
-        if os.path.exists(image_path):
-            return os.path.join('importing', 'resized', f'{image_name}.jpg')
-    return 'placeholder.png'
+	if image_name:
+		BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+		image_path = os.path.join(BASE_DIR, 'media', 'importing', 'resized', f'{image_name}.jpg')
+		if os.path.exists(image_path):
+			return os.path.join('importing', 'resized', f'{image_name}.jpg')
+	return 'placeholder.png'
+
 
 def create_or_update_attributes(product, row_data):
 	drink_value = row_data['drink_value']
@@ -111,28 +113,31 @@ def attach_image_to_product(product, image_name):
 	product_image = ProductImage.objects.filter(product=product).first()
 	
 	if image_name:
-		image_path = os.path.join('importing', 'resized', f'{image_name}.jpg')
-		if os.path.exists(os.path.join('media', image_path)):
+		image_path = os.path.join(settings.MEDIA_ROOT, 'importing', 'resized', f'{image_name}.jpg')
+		if os.path.exists(image_path):
 			if product_image:
-				pass
+				# Если объект ProductImage существует, обновляем изображение
+				product_image.image = os.path.join('importing', 'resized', f'{image_name}.jpg')
+				product_image.save()
 			else:
-				with open(os.path.join('media', image_path), 'rb') as f:
-					ProductImage.objects.create(
-						product=product,
-						alt_text=product.title,
-						image=File(f, name=f'{image_name}.jpg')
-					)
+				# Если объект ProductImage не существует, создаем новый
+				ProductImage.objects.create(
+					product=product,
+					alt_text=product.title,
+					image=os.path.join('importing', 'resized', f'{image_name}.jpg')
+				)
 	else:
+		placeholder_image_path = os.path.join('images', 'placeholder.webp')
 		if product_image:
 			# Если объект ProductImage существует, устанавливаем изображение-заполнитель
-			product_image.image = 'images/placeholder.webp'
+			product_image.image = placeholder_image_path
 			product_image.save()
 		else:
 			# Если объект ProductImage не существует, создаем новый с изображением-заполнителем
 			ProductImage.objects.create(
 				product=product,
 				alt_text=product.title,
-				image='images/placeholder.webp'
+				image=placeholder_image_path
 			)
 
 
