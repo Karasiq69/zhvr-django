@@ -31,10 +31,11 @@ class Product(models.Model):
 	discount_price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 	weight = models.DecimalField(max_digits=5, decimal_places=0, blank=True, null=True)
 	is_active = models.BooleanField(default=True)
+	attribute_values = models.ManyToManyField('AttributeValue', blank=True)
+	sku = models.CharField(max_length=10, unique=True)
 	
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	attribute_values = models.ManyToManyField('AttributeValue', blank=True)
 	
 	
 	def get_price(self):

@@ -81,7 +81,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [],
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Добавьте эту строку
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
@@ -207,4 +207,4 @@ PAYMENT_SHOP_ID = getenv('PAYMENT_SHOP_ID')
 # Включаем доставку и оплату при оформлении заказа
 CART_DELIVERY = False
 PAYMENT_SWITCH = False
-KASSA_RETURN_URL=getenv('KASSA_RETURN_URL')
+KASSA_RETURN_URL = getenv('KASSA_RETURN_URL')

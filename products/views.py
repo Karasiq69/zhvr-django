@@ -6,6 +6,9 @@ from .serializers import ProductSerializer, ProductsByCategorySerializer
 from rest_framework import generics
 from .models import Category
 from .serializers import CategorySerializer
+from django.contrib import messages
+from django.shortcuts import redirect
+from .services.product_importer import main
 
 
 class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -30,3 +33,18 @@ class ProductsByCategoryListView(generics.ListAPIView):
 	queryset = Category.objects.all()
 	serializer_class = ProductsByCategorySerializer
 	permission_classes = [AllowAny]
+
+
+from django.contrib import messages
+from django.shortcuts import redirect
+from .services.product_importer import main
+
+
+def import_products(request):
+	if request.method=='GET':
+		try:
+			main()
+			messages.success(request, 'Импорт данных выполнен успешно.')
+		except Exception as e:
+			messages.error(request, f'Ошибка при импорте данных: {str(e)}')
+	return redirect('admin:index')

@@ -1,0 +1,6 @@
+{% if user.is_superuser %}
+    <form method="post" action="{% url 'import_products' %}">
+        {% csrf_token %}
+        <button type="submit">Импортировать данные</button>
+    </form>
+{% endif %}
